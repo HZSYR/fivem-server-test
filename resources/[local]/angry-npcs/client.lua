@@ -36,17 +36,17 @@ local npcWeapons = {
 local angryNpcs = {}
 local angryBlips = {}
 local angryCount = 0
-local MAX_ANGRY_NPCS = 30
+local MAX_ANGRY_NPCS = 50
 
 local function getRandomWeapon()
     local roll = math.random(1, 100)
     local tier
 
-    if roll <= 25 then
+    if roll <= 15 then
         tier = 1
-    elseif roll <= 60 then
+    elseif roll <= 45 then
         tier = 2
-    elseif roll <= 90 then
+    elseif roll <= 80 then
         tier = 3
     else
         tier = 4
@@ -62,22 +62,30 @@ local function getRandomWeapon()
     return tierWeapons[math.random(1, #tierWeapons)]
 end
 
+local function isHumanPed(ped)
+    return not IsPedAnimal(ped)
+end
+
 local function addBlipForNpc(npcPed)
+    if angryBlips[npcPed] and DoesBlipExist(angryBlips[npcPed]) then
+        RemoveBlip(angryBlips[npcPed])
+    end
     local blip = AddBlipForEntity(npcPed)
-    SetBlipSprite(blip, 270)
+    SetBlipSprite(blip, 161)
     SetBlipColour(blip, 1)
-    SetBlipScale(blip, 0.7)
-    SetBlipFlashes(blip, true)
+    SetBlipScale(blip, 0.9)
     SetBlipAsShortRange(blip, false)
     BeginTextCommandSetBlipName("STRING")
-    AddTextComponentSubstringPlayerName("NPC Marah")
+    AddTextComponentSubstringPlayerName("MUSUH")
     EndTextCommandSetBlipName(blip)
     angryBlips[npcPed] = blip
 end
 
 local function removeBlipForNpc(npcPed)
     if angryBlips[npcPed] then
-        RemoveBlip(angryBlips[npcPed])
+        if DoesBlipExist(angryBlips[npcPed]) then
+            RemoveBlip(angryBlips[npcPed])
+        end
         angryBlips[npcPed] = nil
     end
 end
@@ -107,6 +115,7 @@ local function makeNpcAngry(npcPed)
     if IsEntityDead(npcPed) then return end
     if IsPedAPlayer(npcPed) then return end
     if angryCount >= MAX_ANGRY_NPCS then return end
+    if not isHumanPed(npcPed) then return end
 
     angryNpcs[npcPed] = true
     angryCount = angryCount + 1
@@ -114,15 +123,24 @@ local function makeNpcAngry(npcPed)
     local playerPed = PlayerPedId()
     local weapon = getRandomWeapon()
 
+    SetPedFleeAttributes(npcPed, 0, false)
+    SetBlockingOfNonTemporaryEvents(npcPed, true)
+    SetPedConfigFlag(npcPed, 281, true)
+    SetPedConfigFlag(npcPed, 2, false)
+    SetPedConfigFlag(npcPed, 292, true)
+
+    ClearPedTasksImmediately(npcPed)
+
     GiveWeaponToPed(npcPed, weapon, 9999, true, true)
     SetCurrentPedWeapon(npcPed, weapon, true)
 
     SetPedCombatAbility(npcPed, 100)
     SetPedCombatMovement(npcPed, 3)
     SetPedCombatRange(npcPed, 2)
-    SetPedAccuracy(npcPed, math.random(40, 75))
-    SetPedSeeingRange(npcPed, 200.0)
-    SetPedHearingRange(npcPed, 150.0)
+    SetPedAccuracy(npcPed, math.random(50, 85))
+    SetPedSeeingRange(npcPed, 250.0)
+    SetPedHearingRange(npcPed, 200.0)
+    SetPedAlertness(npcPed, 3)
 
     SetPedCombatAttributes(npcPed, 0, true)
     SetPedCombatAttributes(npcPed, 1, true)
@@ -132,12 +150,12 @@ local function makeNpcAngry(npcPed)
     SetPedCombatAttributes(npcPed, 20, true)
     SetPedCombatAttributes(npcPed, 46, true)
     SetPedCombatAttributes(npcPed, 52, true)
+    SetPedCombatAttributes(npcPed, 58, true)
 
-    SetPedFleeAttributes(npcPed, 0, false)
-    SetBlockingOfNonTemporaryEvents(npcPed, true)
+    SetEntityHealth(npcPed, math.random(300, 500))
+    SetPedArmour(npcPed, math.random(100, 200))
 
-    SetEntityHealth(npcPed, math.random(200, 400))
-    SetPedArmour(npcPed, math.random(50, 150))
+    SetPedRelationshipGroupHash(npcPed, GetHashKey("HATES_PLAYER"))
 
     TaskCombatPed(npcPed, playerPed, 0, 16)
     SetPedKeepTask(npcPed, true)
@@ -147,59 +165,70 @@ local function makeNpcAngry(npcPed)
     PlayPain(npcPed, 6, 0)
     SetFlash(0, 0, 80, 200, 80)
 
-    if math.random(1, 100) <= 50 then
-        Citizen.SetTimeout(math.random(500, 2000), function()
-            local nearbyPeds = getNearbyPeds(GetEntityCoords(npcPed), 25.0)
-            for _, nearbyPed in ipairs(nearbyPeds) do
-                if not angryNpcs[nearbyPed] and math.random(1, 100) <= 70 then
-                    makeNpcAngry(nearbyPed)
-                end
+    Citizen.SetTimeout(math.random(300, 1500), function()
+        local nearbyPeds = getNearbyPeds(GetEntityCoords(npcPed), 40.0)
+        for _, nearbyPed in ipairs(nearbyPeds) do
+            if not angryNpcs[nearbyPed] then
+                makeNpcAngry(nearbyPed)
             end
-        end)
-    end
+        end
+    end)
 end
 
 Citizen.CreateThread(function()
+    AddRelationshipGroup("HATES_PLAYER")
+    SetRelationshipBetweenGroups(5, GetHashKey("HATES_PLAYER"), GetHashKey("PLAYER"))
+    SetRelationshipBetweenGroups(5, GetHashKey("PLAYER"), GetHashKey("HATES_PLAYER"))
+end)
+
+Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(200)
+        Citizen.Wait(100)
 
         local playerPed = PlayerPedId()
         local playerPos = GetEntityCoords(playerPed)
         local isShooting = IsPedShooting(playerPed)
+        local isAiming = IsPlayerFreeAiming(PlayerId())
 
         local handle, ped = FindFirstPed()
         local found = true
 
         while found do
             if DoesEntityExist(ped) and not IsPedAPlayer(ped) and not IsEntityDead(ped) and not angryNpcs[ped] then
-                local pedPos = GetEntityCoords(ped)
-                local dist = #(playerPos - pedPos)
+                if isHumanPed(ped) then
+                    local pedPos = GetEntityCoords(ped)
+                    local dist = #(playerPos - pedPos)
 
-                if dist < 100.0 then
-                    local triggered = false
+                    if dist < 120.0 then
+                        local triggered = false
 
-                    if HasEntityBeenDamagedByEntity(ped, playerPed, true) then
-                        triggered = true
-                    end
-
-                    if not triggered and IsPedInAnyVehicle(playerPed, false) then
-                        local veh = GetVehiclePedIsIn(playerPed, false)
-                        if HasEntityBeenDamagedByEntity(ped, veh, true) then
+                        if HasEntityBeenDamagedByEntity(ped, playerPed, true) then
                             triggered = true
                         end
-                    end
 
-                    if not triggered and IsPedRagdoll(ped) and dist < 5.0 then
-                        triggered = true
-                    end
+                        if not triggered and IsPedInAnyVehicle(playerPed, false) then
+                            local veh = GetVehiclePedIsIn(playerPed, false)
+                            if HasEntityBeenDamagedByEntity(ped, veh, true) then
+                                triggered = true
+                            end
+                        end
 
-                    if not triggered and isShooting and dist < 80.0 then
-                        triggered = true
-                    end
+                        if not triggered and IsPedRagdoll(ped) and dist < 8.0 then
+                            triggered = true
+                        end
 
-                    if triggered then
-                        makeNpcAngry(ped)
-                        ClearEntityLastDamageEntity(ped)
+                        if not triggered and isShooting and dist < 100.0 then
+                            triggered = true
+                        end
+
+                        if not triggered and isAiming and dist < 15.0 then
+                            triggered = true
+                        end
+
+                        if triggered then
+                            makeNpcAngry(ped)
+                            ClearEntityLastDamageEntity(ped)
+                        end
                     end
                 end
             end
@@ -213,7 +242,7 @@ end)
 
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(200)
+        Citizen.Wait(150)
 
         local playerPed = PlayerPedId()
 
@@ -228,13 +257,13 @@ Citizen.CreateThread(function()
 
                 while found do
                     if DoesEntityExist(ped) and not IsPedAPlayer(ped) and not IsEntityDead(ped) and not angryNpcs[ped] then
-                        local pedPos = GetEntityCoords(ped)
-                        local dist = #(vehPos - pedPos)
+                        if isHumanPed(ped) then
+                            local pedPos = GetEntityCoords(ped)
+                            local dist = #(vehPos - pedPos)
 
-                        if dist < 4.0 then
-                            makeNpcAngry(ped)
-                        elseif dist < 7.0 and speed > 40.0 then
-                            if math.random(1, 100) <= 60 then
+                            if dist < 5.0 then
+                                makeNpcAngry(ped)
+                            elseif dist < 10.0 and speed > 30.0 then
                                 makeNpcAngry(ped)
                             end
                         end
@@ -251,15 +280,28 @@ end)
 
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(5000)
+        Citizen.Wait(1500)
 
         SetAllRandomPedsFlee(false)
+        SetAllRandomPedsFleeThisFrame(false)
 
         for npcPed, _ in pairs(angryNpcs) do
             if not DoesEntityExist(npcPed) or IsEntityDead(npcPed) then
                 removeBlipForNpc(npcPed)
                 angryNpcs[npcPed] = nil
                 angryCount = angryCount - 1
+            else
+                if not angryBlips[npcPed] or not DoesBlipExist(angryBlips[npcPed]) then
+                    addBlipForNpc(npcPed)
+                end
+
+                local playerPed = PlayerPedId()
+                if not IsPedInCombat(npcPed, playerPed) then
+                    ClearPedTasksImmediately(npcPed)
+                    TaskCombatPed(npcPed, playerPed, 0, 16)
+                    SetPedKeepTask(npcPed, true)
+                    SetBlockingOfNonTemporaryEvents(npcPed, true)
+                end
             end
         end
 
@@ -267,14 +309,24 @@ Citizen.CreateThread(function()
         local found = true
 
         while found do
-            if DoesEntityExist(ped) and not IsPedAPlayer(ped) and not IsEntityDead(ped) then
+            if DoesEntityExist(ped) and not IsPedAPlayer(ped) and not IsEntityDead(ped) and isHumanPed(ped) then
                 SetPedDiesWhenInjured(ped, false)
                 SetPedSuffersCriticalHits(ped, false)
                 SetPedConfigFlag(ped, 281, true)
+                SetPedConfigFlag(ped, 2, false)
+                SetPedFleeAttributes(ped, 0, false)
+                SetPedCombatAttributes(ped, 17, false)
             end
             found, ped = FindNextPed(handle)
         end
         EndFindPed(handle)
+    end
+end)
+
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(0)
+        SetAllRandomPedsFleeThisFrame(false)
     end
 end)
 
@@ -293,7 +345,7 @@ AddEventHandler('onClientResourceStart', function(resourceName)
         TriggerEvent('chat:addMessage', {
             color = {255, 50, 50},
             multiline = true,
-            args = {"[SECRET ROOM]", "NPC RAGE MODE aktif! Semua NPC marah kalau dengar tembakan!"}
+            args = {"[SECRET ROOM]", "NPC RAGE MODE EXTREME! Tembak = semua NPC dalam 100m langsung marah!"}
         })
     end
 end)
@@ -308,7 +360,7 @@ end)
 
 RegisterCommand('rageall', function()
     local playerPos = GetEntityCoords(PlayerPedId())
-    local nearbyPeds = getNearbyPeds(playerPos, 50.0)
+    local nearbyPeds = getNearbyPeds(playerPos, 80.0)
 
     for _, ped in ipairs(nearbyPeds) do
         makeNpcAngry(ped)
