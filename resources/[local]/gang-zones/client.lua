@@ -6,7 +6,7 @@ local gangs = {
         zone = vector3(-180.0, -1670.0, 33.0),
         radius = 200.0,
         peds = {`g_m_y_ballaorig_01`, `g_m_y_ballaeast_01`, `g_m_y_ballasout_01`},
-        weapons = {`WEAPON_PISTOL`, `WEAPON_MICROSMG`, `WEAPON_PUMPSHOTGUN`, `WEAPON_MACHETE`},
+        weapons = {`WEAPON_PISTOL`, `WEAPON_MICROSMG`, `WEAPON_PUMPSHOTGUN`, `WEAPON_COMBATPISTOL`},
         vehicles = {`buccaneer`, `tornado`, `manana`, `emperor`},
         maxMembers = 12,
         members = {},
@@ -19,7 +19,7 @@ local gangs = {
         zone = vector3(325.0, -2040.0, 20.0),
         radius = 200.0,
         peds = {`g_m_y_mexgang_01`, `g_m_y_mexgoon_01`, `g_m_y_mexgoon_02`, `g_m_y_mexgoon_03`},
-        weapons = {`WEAPON_PISTOL`, `WEAPON_MICROSMG`, `WEAPON_ASSAULTRIFLE`, `WEAPON_KNIFE`},
+        weapons = {`WEAPON_PISTOL`, `WEAPON_MICROSMG`, `WEAPON_ASSAULTRIFLE`, `WEAPON_MACHINEPISTOL`},
         vehicles = {`tornado2`, `buccaneer2`, `chino`, `virgo`},
         maxMembers = 12,
         members = {},
@@ -32,7 +32,7 @@ local gangs = {
         zone = vector3(-150.0, -1770.0, 30.0),
         radius = 180.0,
         peds = {`g_m_y_famca_01`, `g_m_y_famdnf_01`, `g_m_y_famfor_01`},
-        weapons = {`WEAPON_PISTOL`, `WEAPON_MICROSMG`, `WEAPON_SAWNOFFSHOTGUN`, `WEAPON_BAT`},
+        weapons = {`WEAPON_PISTOL`, `WEAPON_MICROSMG`, `WEAPON_SAWNOFFSHOTGUN`, `WEAPON_SNSPISTOL`},
         vehicles = {`buccaneer`, `tornado`, `primo`, `emperor`},
         maxMembers = 10,
         members = {},
@@ -45,7 +45,7 @@ local gangs = {
         zone = vector3(980.0, -130.0, 74.0),
         radius = 250.0,
         peds = {`g_m_y_lost_01`, `g_m_y_lost_02`, `g_m_y_lost_03`},
-        weapons = {`WEAPON_PISTOL`, `WEAPON_SAWNOFFSHOTGUN`, `WEAPON_PUMPSHOTGUN`, `WEAPON_BAT`, `WEAPON_CROWBAR`},
+        weapons = {`WEAPON_PISTOL`, `WEAPON_SAWNOFFSHOTGUN`, `WEAPON_PUMPSHOTGUN`, `WEAPON_MICROSMG`, `WEAPON_DOUBLEBARRELSHOTGUN`},
         vehicles = {`daemon`, `daemon2`, `hexer`, `innovation`, `wolfsbane`, `zombiea`, `zombieb`},
         maxMembers = 10,
         members = {},
@@ -71,7 +71,7 @@ local gangs = {
         zone = vector3(-700.0, -900.0, 19.0),
         radius = 180.0,
         peds = {`g_m_m_chigoon_01`, `g_m_m_chigoon_02`, `g_m_m_chiboss_01`, `g_m_m_chicold_01`},
-        weapons = {`WEAPON_PISTOL`, `WEAPON_SMG`, `WEAPON_ASSAULTRIFLE`, `WEAPON_DAGGER`},
+        weapons = {`WEAPON_PISTOL`, `WEAPON_SMG`, `WEAPON_ASSAULTRIFLE`, `WEAPON_HEAVYPISTOL`},
         vehicles = {`fugitive`, `oracle`, `schafter2`, `fq2`},
         maxMembers = 10,
         members = {},
@@ -84,7 +84,7 @@ local gangs = {
         zone = vector3(2430.0, 4970.0, 46.0),
         radius = 350.0,
         peds = {`a_m_m_hillbilly_01`, `a_m_m_hillbilly_02`, `a_m_m_farmer_01`, `a_m_o_genstreet_01`},
-        weapons = {`WEAPON_MUSKET`, `WEAPON_SAWNOFFSHOTGUN`, `WEAPON_PUMPSHOTGUN`, `WEAPON_HATCHET`, `WEAPON_BOTTLE`},
+        weapons = {`WEAPON_MUSKET`, `WEAPON_SAWNOFFSHOTGUN`, `WEAPON_PUMPSHOTGUN`, `WEAPON_DOUBLEBARRELSHOTGUN`, `WEAPON_REVOLVER`},
         vehicles = {`rebel`, `rebel2`, `bodhi2`, `dune`, `tractor`, `tractor2`},
         maxMembers = 8,
         members = {},
@@ -110,7 +110,7 @@ local gangs = {
         zone = vector3(50.0, -780.0, 31.0),
         radius = 200.0,
         peds = {`a_m_y_hipster_01`, `a_m_y_hipster_02`, `a_m_y_vinewood_01`, `a_m_y_soucent_02`},
-        weapons = {`WEAPON_PISTOL`, `WEAPON_MICROSMG`, `WEAPON_SWITCHBLADE`},
+        weapons = {`WEAPON_PISTOL`, `WEAPON_MICROSMG`, `WEAPON_APPISTOL`, `WEAPON_SNSPISTOL`},
         vehicles = {`elegy2`, `jester`, `massacro`, `banshee`, `buffalo`, `comet2`, `feltzer2`, `sultan`},
         maxMembers = 8,
         members = {},
@@ -123,7 +123,7 @@ local gangs = {
         zone = vector3(-2360.0, 3250.0, 32.0),
         radius = 300.0,
         peds = {`s_m_y_armymech_01`, `s_m_m_marine_01`, `s_m_m_marine_02`, `s_m_y_marine_01`},
-        weapons = {`WEAPON_CARBINERIFLE`, `WEAPON_SPECIALCARBINE`, `WEAPON_COMBATMG`, `WEAPON_RPG`, `WEAPON_HEAVYSNIPER`, `WEAPON_GRENADE`},
+        weapons = {`WEAPON_CARBINERIFLE`, `WEAPON_SPECIALCARBINE`, `WEAPON_COMBATMG`, `WEAPON_RPG`, `WEAPON_HEAVYSNIPER`},
         vehicles = {`barracks`, `crusader`, `insurgent`, `insurgent2`, `rhino`},
         maxMembers = 8,
         members = {},
@@ -136,7 +136,7 @@ local gangs = {
         zone = vector3(1540.0, 1700.0, 110.0),
         radius = 250.0,
         peds = {`a_m_m_hillbilly_01`, `a_m_m_hillbilly_02`, `g_m_m_mexboss_01`, `g_m_m_mexboss_02`},
-        weapons = {`WEAPON_PISTOL`, `WEAPON_SAWNOFFSHOTGUN`, `WEAPON_MICROSMG`, `WEAPON_MACHETE`, `WEAPON_MOLOTOV`},
+        weapons = {`WEAPON_PISTOL`, `WEAPON_SAWNOFFSHOTGUN`, `WEAPON_MICROSMG`, `WEAPON_COMBATPISTOL`, `WEAPON_PUMPSHOTGUN`},
         vehicles = {`rebel`, `rebel2`, `ratloader`, `dune`, `bison`},
         maxMembers = 8,
         members = {},
@@ -149,7 +149,7 @@ local gangs = {
         zone = vector3(-310.0, 6130.0, 31.0),
         radius = 200.0,
         peds = {`g_m_y_lost_01`, `g_m_y_lost_02`, `g_m_y_lost_03`},
-        weapons = {`WEAPON_PISTOL`, `WEAPON_SAWNOFFSHOTGUN`, `WEAPON_BAT`, `WEAPON_CROWBAR`, `WEAPON_BOTTLE`},
+        weapons = {`WEAPON_PISTOL`, `WEAPON_SAWNOFFSHOTGUN`, `WEAPON_MICROSMG`, `WEAPON_PUMPSHOTGUN`, `WEAPON_REVOLVER`},
         vehicles = {`daemon`, `daemon2`, `hexer`, `nightblade`, `ratbike`, `wolfsbane`, `avarus`},
         maxMembers = 8,
         members = {},
@@ -158,6 +158,7 @@ local gangs = {
 }
 
 local currentGangZone = nil
+local zoneEntryTime = nil
 local spawnDistance = 300.0
 
 local function loadModel(model)
@@ -193,6 +194,15 @@ local function setupGangMember(ped, gang)
     SetPedArmour(ped, math.random(0, 100))
 
     SetPedRelationshipGroupHash(ped, GetHashKey("GANG_" .. gang.name))
+
+    local blip = AddBlipForEntity(ped)
+    SetBlipSprite(blip, 271)
+    SetBlipColour(blip, gang.blipColor)
+    SetBlipScale(blip, 0.6)
+    SetBlipAsShortRange(blip, true)
+    BeginTextCommandSetBlipName("STRING")
+    AddTextComponentSubstringPlayerName(gang.name)
+    EndTextCommandSetBlipName(blip)
 end
 
 local function spawnGangMembers(gang)
@@ -354,36 +364,86 @@ Citizen.CreateThread(function()
 
         if inZone and inZone ~= currentGangZone then
             currentGangZone = inZone
+            zoneEntryTime = GetGameTimer()
+            PlaySoundFrontend(-1, "MP_WAVE_COMPLETE", "HUD_FRONTEND_DEFAULT_SOUNDSET", true)
             TriggerEvent('chat:addMessage', {
                 color = inZone.color,
                 args = {"[GANG ZONE]", "Kamu memasuki wilayah " .. inZone.name .. "! Hati-hati!"}
             })
         elseif not inZone and currentGangZone then
+            PlaySoundFrontend(-1, "CHECKPOINT_MISSED", "HUD_MINI_GAME_SOUNDSET", true)
             TriggerEvent('chat:addMessage', {
                 color = {200, 200, 200},
                 args = {"[GANG ZONE]", "Kamu keluar dari wilayah gang."}
             })
             currentGangZone = nil
+            zoneEntryTime = nil
         end
     end
 end)
 
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(500)
+        Citizen.Wait(0)
 
         if currentGangZone then
             local gang = currentGangZone
             local r, g, b = gang.color[1], gang.color[2], gang.color[3]
+            local elapsed = GetGameTimer() - (zoneEntryTime or GetGameTimer())
 
-            SetTextFont(4)
-            SetTextScale(0.4, 0.4)
-            SetTextColour(r, g, b, 220)
-            SetTextDropshadow(1, 0, 0, 0, 200)
-            SetTextOutline()
-            SetTextEntry("STRING")
-            AddTextComponentString("~w~[ " .. gang.name .. " Territory ]")
-            DrawText(0.5 - 0.06, 0.02)
+            if elapsed < 5000 then
+                local alpha = math.floor(255 * (1.0 - (elapsed / 5000.0)))
+
+                SetTextFont(1)
+                SetTextScale(0.0, 0.9)
+                SetTextColour(r, g, b, alpha)
+                SetTextDropshadow(2, 0, 0, 0, alpha)
+                SetTextOutline()
+                SetTextCentre(true)
+                SetTextEntry("STRING")
+                AddTextComponentString(gang.name .. " TERRITORY")
+                DrawText(0.5, 0.15)
+
+                SetTextFont(0)
+                SetTextScale(0.0, 0.4)
+                SetTextColour(255, 255, 255, alpha)
+                SetTextDropshadow(1, 0, 0, 0, alpha)
+                SetTextCentre(true)
+                SetTextEntry("STRING")
+                AddTextComponentString("~r~PERINGATAN: ~w~Zona berbahaya!")
+                DrawText(0.5, 0.20)
+            else
+                SetTextFont(4)
+                SetTextScale(0.35, 0.35)
+                SetTextColour(r, g, b, 200)
+                SetTextDropshadow(1, 0, 0, 0, 180)
+                SetTextOutline()
+                SetTextEntry("STRING")
+                AddTextComponentString("[ " .. gang.name .. " ]")
+                DrawText(0.01, 0.94)
+            end
+
+            local playerPos = GetEntityCoords(PlayerPedId())
+            DrawMarker(
+                25,
+                playerPos.x, playerPos.y, playerPos.z - 1.0,
+                0.0, 0.0, 0.0,
+                0.0, 0.0, 0.0,
+                gang.radius * 2.0, gang.radius * 2.0, 2.0,
+                r, g, b, 20,
+                false, false, 2, false, nil, nil, false
+            )
+
+            local zoneCenter = gang.zone
+            DrawMarker(
+                1,
+                zoneCenter.x, zoneCenter.y, zoneCenter.z + 0.5,
+                0.0, 0.0, 0.0,
+                0.0, 0.0, 0.0,
+                2.0, 2.0, 30.0,
+                r, g, b, 100,
+                false, true, 2, false, nil, nil, false
+            )
         end
     end
 end)
@@ -452,6 +512,38 @@ AddEventHandler('onClientResourceStop', function(resourceName)
     if resourceName == GetCurrentResourceName() then
         for _, gang in ipairs(gangs) do
             despawnGangMembers(gang)
+        end
+    end
+end)
+
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(300)
+
+        local playerPed = PlayerPedId()
+        local isShooting = IsPedShooting(playerPed)
+
+        if isShooting then
+            local playerPos = GetEntityCoords(playerPed)
+
+            for _, gang in ipairs(gangs) do
+                if gang.spawned then
+                    for _, member in ipairs(gang.members) do
+                        if DoesEntityExist(member.ped) and not IsEntityDead(member.ped) then
+                            if not IsPedInCombat(member.ped, 0) then
+                                local pedPos = GetEntityCoords(member.ped)
+                                local dist = #(playerPos - pedPos)
+
+                                if dist < 80.0 then
+                                    TaskCombatPed(member.ped, playerPed, 0, 16)
+                                    SetPedKeepTask(member.ped, true)
+                                    SetBlockingOfNonTemporaryEvents(member.ped, true)
+                                end
+                            end
+                        end
+                    end
+                end
+            end
         end
     end
 end)

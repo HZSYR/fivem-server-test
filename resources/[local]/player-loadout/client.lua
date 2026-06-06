@@ -116,8 +116,6 @@ local function giveAllWeapons()
 
     for _, weapon in ipairs(allWeapons) do
         GiveWeaponToPed(ped, weapon, 9999, false, false)
-        local maxAmmo = GetMaxAmmo(ped, weapon)
-        SetPedAmmo(ped, weapon, maxAmmo > 0 and maxAmmo or 9999)
     end
 
     SetPedInfiniteAmmo(ped, true, 0)

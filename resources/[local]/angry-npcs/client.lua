@@ -34,6 +34,7 @@ local npcWeapons = {
 }
 
 local angryNpcs = {}
+local angryBlips = {}
 local angryCount = 0
 local MAX_ANGRY_NPCS = 30
 
@@ -61,9 +62,24 @@ local function getRandomWeapon()
     return tierWeapons[math.random(1, #tierWeapons)]
 end
 
-local function angryEffect(npcPed)
-    PlayPain(npcPed, 6, 0)
-    SetFlash(0, 0, 80, 200, 80)
+local function addBlipForNpc(npcPed)
+    local blip = AddBlipForEntity(npcPed)
+    SetBlipSprite(blip, 270)
+    SetBlipColour(blip, 1)
+    SetBlipScale(blip, 0.7)
+    SetBlipFlashes(blip, true)
+    SetBlipAsShortRange(blip, false)
+    BeginTextCommandSetBlipName("STRING")
+    AddTextComponentSubstringPlayerName("NPC Marah")
+    EndTextCommandSetBlipName(blip)
+    angryBlips[npcPed] = blip
+end
+
+local function removeBlipForNpc(npcPed)
+    if angryBlips[npcPed] then
+        RemoveBlip(angryBlips[npcPed])
+        angryBlips[npcPed] = nil
+    end
 end
 
 function getNearbyPeds(coords, radius)
@@ -126,15 +142,17 @@ local function makeNpcAngry(npcPed)
     TaskCombatPed(npcPed, playerPed, 0, 16)
     SetPedKeepTask(npcPed, true)
 
-    angryEffect(npcPed)
+    addBlipForNpc(npcPed)
 
-    if math.random(1, 100) <= 30 then
-        Citizen.SetTimeout(math.random(1000, 3000), function()
-            local nearbyPeds = getNearbyPeds(GetEntityCoords(npcPed), 15.0)
+    PlayPain(npcPed, 6, 0)
+    SetFlash(0, 0, 80, 200, 80)
+
+    if math.random(1, 100) <= 50 then
+        Citizen.SetTimeout(math.random(500, 2000), function()
+            local nearbyPeds = getNearbyPeds(GetEntityCoords(npcPed), 25.0)
             for _, nearbyPed in ipairs(nearbyPeds) do
-                if not angryNpcs[nearbyPed] and math.random(1, 100) <= 50 then
+                if not angryNpcs[nearbyPed] and math.random(1, 100) <= 70 then
                     makeNpcAngry(nearbyPed)
-                    break
                 end
             end
         end)
@@ -143,10 +161,11 @@ end
 
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(250)
+        Citizen.Wait(200)
 
         local playerPed = PlayerPedId()
         local playerPos = GetEntityCoords(playerPed)
+        local isShooting = IsPedShooting(playerPed)
 
         local handle, ped = FindFirstPed()
         local found = true
@@ -156,7 +175,7 @@ Citizen.CreateThread(function()
                 local pedPos = GetEntityCoords(ped)
                 local dist = #(playerPos - pedPos)
 
-                if dist < 80.0 then
+                if dist < 100.0 then
                     local triggered = false
 
                     if HasEntityBeenDamagedByEntity(ped, playerPed, true) then
@@ -174,10 +193,8 @@ Citizen.CreateThread(function()
                         triggered = true
                     end
 
-                    if not triggered and IsPedShooting(playerPed) and dist < 25.0 then
-                        if math.random(1, 100) <= 40 then
-                            triggered = true
-                        end
+                    if not triggered and isShooting and dist < 80.0 then
+                        triggered = true
                     end
 
                     if triggered then
@@ -240,6 +257,7 @@ Citizen.CreateThread(function()
 
         for npcPed, _ in pairs(angryNpcs) do
             if not DoesEntityExist(npcPed) or IsEntityDead(npcPed) then
+                removeBlipForNpc(npcPed)
                 angryNpcs[npcPed] = nil
                 angryCount = angryCount - 1
             end
@@ -275,14 +293,22 @@ AddEventHandler('onClientResourceStart', function(resourceName)
         TriggerEvent('chat:addMessage', {
             color = {255, 50, 50},
             multiline = true,
-            args = {"[SECRET ROOM]", "NPC RAGE MODE aktif! Jangan senggol mereka... atau senggol aja!"}
+            args = {"[SECRET ROOM]", "NPC RAGE MODE aktif! Semua NPC marah kalau dengar tembakan!"}
         })
+    end
+end)
+
+AddEventHandler('onClientResourceStop', function(resourceName)
+    if resourceName == GetCurrentResourceName() then
+        for npcPed, _ in pairs(angryNpcs) do
+            removeBlipForNpc(npcPed)
+        end
     end
 end)
 
 RegisterCommand('rageall', function()
     local playerPos = GetEntityCoords(PlayerPedId())
-    local nearbyPeds = getNearbyPeds(playerPos, 30.0)
+    local nearbyPeds = getNearbyPeds(playerPos, 50.0)
 
     for _, ped in ipairs(nearbyPeds) do
         makeNpcAngry(ped)
@@ -301,6 +327,7 @@ RegisterCommand('ragereset', function()
             RemoveAllPedWeapons(npcPed, true)
             SetPedAsNoLongerNeeded(npcPed)
         end
+        removeBlipForNpc(npcPed)
     end
     angryNpcs = {}
     angryCount = 0
