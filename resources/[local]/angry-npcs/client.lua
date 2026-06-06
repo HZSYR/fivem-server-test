@@ -265,6 +265,8 @@ Citizen.CreateThread(function()
         Citizen.Wait(1000)
         ClearPlayerWantedLevel(PlayerId())
         SetMaxWantedLevel(0)
+        SetPlayerWantedLevel(PlayerId(), 0, false)
+        SetPlayerWantedLevelNow(PlayerId(), false)
     end
 end)
 
